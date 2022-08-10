@@ -7,7 +7,7 @@ manager = Manager("./databases/data.db")
 
 def userMenu():
     options = ["1 - Cadastrar usuário", "2 - Listar usuários", "3 - Voltar"]
-    esc = u.menu("Gerenciamento de Usuários\noi\n sai", options)
+    esc = u.menu("Gerenciamento de Usuários", options)
 
     match esc:
         case 1:
@@ -27,7 +27,7 @@ def userMenu():
 
         case 2:
             manager.getUsers()
-            input("vsf")
+            input("Pressione ENTER para continuar...")
             return 0
 
     return

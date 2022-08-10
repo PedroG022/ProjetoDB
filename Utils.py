@@ -1,50 +1,49 @@
 from os import system
 import sqlite3
+import subprocess
 
 from models.User import User
 
 
 class Menu():
-    # Prints a separator
-    def printSeparator(size):
-        print("#%s#" % ("=" * size))
+    # Prints a card
+    def card(text, clear=False):
+        if clear:
+            system("clear")
+
+        args = ["gum", "style", "--border", "normal", "--margin",
+                "1", "--border-foreground", "212", text]
+
+        res = subprocess.run(
+            args, stdout=subprocess.PIPE, text=True).stdout
+
+        print(res)
 
     # Creates a simple menu
     def menu(title, options):
-        system("clear")
+        Menu.card(title, True)
 
-        system("""gum style --border normal --margin "1" --padding "1 2" --border-foreground 212 "%s"
-    """ % title)
-
-        gumstr = "gum choose "
+        args = ["gum", "choose"]
 
         for option in options:
-            gumstr += "'%s' " % option
+            args.append(option)
 
-        system(gumstr + " > tes.txt")
+        result = subprocess.run(
+            args, stdout=subprocess.PIPE, text=True).stdout.strip().split(" ")[0]
 
-        with open("tes.txt", "r") as f:
-            option = f.readline()
-            option = option.split(" ")[0].strip()
-            system("rm tes.txt")
-            return int(option)
+        return int(result)
 
     # Reads input
     def ginp(placeholder, password=False):
-        usePassword = ""
+        args = ["gum", "input", "--placeholder", placeholder]
 
         if (password):
-            usePassword = "--password"
+            args.append("--password")
 
-        system("gum input %s --placeholder \"%s\" > tes.txt" %
-               (usePassword, placeholder))
-
-        with open("tes.txt", "r") as f:
-            option = f.readline().replace("\n", "")
-            system("rm tes.txt")
-            return (option)
+        return subprocess.run(args, stdout=subprocess.PIPE, text=True).stdout.strip()
 
 
+# Database manager
 class Manager():
     def __init__(self, database):
         self.__database = database
@@ -66,8 +65,7 @@ class Manager():
 
         users = list()
         for row in result:
-            user = User("", "", "", "", "", "", "", "")
-            users.append(user.fromSql(row))
+            users.append(User("", "", "", "", "", "", "", "").fromSql(row))
 
         for user in users:
-            print(user)
+            Menu.card(user.__str__())
