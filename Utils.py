@@ -11,8 +11,8 @@ class Menu():
         if clear:
             system("clear")
 
-        args = ["gum", "style", "--border", "normal", "--margin",
-                "1", "--border-foreground", "212", text]
+        args = ["gum", "style", "--border", "double", "--margin",
+                "0", "--padding", "1 2", "--border-foreground", "212", "--align", "center", "--width", "30", text]
 
         res = subprocess.run(
             args, stdout=subprocess.PIPE, text=True).stdout
