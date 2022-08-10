@@ -6,20 +6,23 @@ manager = Manager("./databases/data.db")
 
 
 def userMenu():
-    options = ["1 - Cadastrar usuário", "2 - Listar usuários", "3 - Voltar"]
+    options = ["1 - Cadastrar usuário", "2 - Listar usuários",
+               "3 - Deletar usuário", "4 - Voltar"]
+
     esc = u.menu("Gerenciamento de Usuários", options)
 
     match esc:
         case 1:
+
             user = User(
-                u.ginp("Nome Completo"),
-                u.ginp("Endereço de Email"),
-                u.ginp("Senha (Mínimo 6 caracteres)", password=True),
-                u.ginp("Data de nascimento (DD/MM/AAAA)"),
-                u.ginp("Subscrição (1 - MENSAL, 2 - ANUAL)"),
-                u.ginp("Endereço (Rua, Número, Bairro, Cidade, Estado)"),
-                u.ginp("Telefone (DDD + Número)"),
-                u.ginp("Forma de pagamento (Cartão de Crédito, Débito, Boleto)")
+                u.inp("Nome Completo"),
+                u.inp("Endereço de Email"),
+                u.inp("Senha (Mínimo 6 caracteres)", password=True),
+                u.inp("Data de nascimento (DD/MM/AAAA)"),
+                u.inp("Subscrição (1 - MENSAL, 2 - ANUAL)"),
+                u.inp("Endereço (Rua, Número, Bairro, Cidade, Estado)"),
+                u.inp("Telefone (DDD + Número)"),
+                u.inp("Forma de pagamento (Cartão de Crédito, Débito, Boleto)")
             )
 
             manager.saveUser(user)
@@ -28,7 +31,13 @@ def userMenu():
         case 2:
             manager.getUsers()
             input("Pressione ENTER para continuar...")
-            return 0
+
+        case 3:
+            if manager.deleteUser(u.inp("Id de usuário")):
+                print("Usuário deletado com sucesso!")
+            else:
+                print("Usuário não encontrado!")
+            input("Pressione ENTER para continuar...")
 
     return
 
@@ -44,6 +53,7 @@ if __name__ == "__main__":
             case 1:
                 userMenu()
             case 2:
+                manager.close()
                 system("clear")
                 exit()
             case _:
